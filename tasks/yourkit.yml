@@ -1,0 +1,63 @@
+---
+# This playbook contains common plays that will be run on all nodes.
+
+- name: yourkit | Check user exists
+  user: name={{yourkit_owner}} state=present
+
+- name: yourkit | Check user home directory
+  stat: path={{yourkit_owner_home}}
+  register: home_present
+
+- debug: msg=" yourkit | Path exists and is a directory"
+  when: home_present.stat.isdir is defined and home_present.stat.isdir == true
+  
+- name: yourkit | Create temporary directory
+  shell: mktemp -d
+  register: tempdir
+  sudo: true
+  tags: yourkit_setup
+
+- name: yourkit | Install tar
+  apt:
+    pkg=tar
+    state="present"
+  tags: yourkit_setup
+
+- name: yourkit | Download yourkit
+  get_url:
+    url="{{ yourkit_url }}"
+    dest="{{ yourkit_dir_tmp }}/"
+  register: yourkit_download
+  tags: yourkit_setup
+
+- name: yourkit | Create base directory
+  file:
+    dest="{{yourkit_base_dir}}"
+    state=directory
+    owner="{{yourkit_owner}}"
+    group="{{yourkit_group}}"
+  sudo : yes
+  when: yourkit_download.changed
+  tags: yourkit_setup
+  
+- name: yourkit | Extract archive yourkit
+  command: chdir={{ yourkit_base_dir }} /bin/tar xfj {{ yourkit_dir_tmp }}/{{ yourkit_archive }}
+  when: yourkit_download.changed
+  tags: yourkit_setup
+  
+#  command: tar xzf {{ eclipse_dir_tmp }}/{{eclipse_archive}} -C {{eclipse_base_dir}}/eclipse-{{eclipse_name}} --strip-components=1  
+  
+#- name: yourkit | Configure yourkit
+#  template: src=yourkit.properties.j2 dest={{yourkit_configuration}}
+#  register: yourkit_configure
+
+#- name: yourkit | Ensure yourkit restarted
+#  service: name=yourkit state=restarted
+#  when: yourkit_configure.changed
+
+- name: yourkit | Cleanup temporary directory
+  file: name={{ tempdir.stdout }} state=absent
+  tags: yourkit_setup
+
+- debug: msg=" yourkit | Start yourkit {{yourkit_base_dir}}/bin/ypj.sh"
+

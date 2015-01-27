@@ -1,0 +1,21 @@
+yourkit_enabled: yes                       # Enable module
+
+#user: 'albandri' #please override me
+user: "{{ lookup('env','USER') }}"
+yourkit_owner: "{{ user }}"
+yourkit_group: "{{ yourkit_owner }}"
+#home: '~' #please override me
+home: "{{ lookup('env','HOME') }}"
+yourkit_owner_home: "{{ home }}"
+yourkit_base_dir: "/usr/local/yourkit"
+#yourkit_home_dir: "/usr/share/yourkit"
+#yourkit_configuration: "{{ yourkit_home_dir }}/bin/yourkit.properties"
+
+yourkit_dir_tmp: "/tmp" # or override with "{{ tempdir.stdout }} in order to have be sure to download the file"
+
+yourkit_year: "2014"
+yourkit_build: "14116"
+yourkit_version: "{{ yourkit_year }}-build-{{ yourkit_build }}"
+
+yourkit_archive: "yjp-{{ yourkit_version }}-linux.tar.bz2"
+yourkit_url: "http://www.yourkit.com/download/{{ yourkit_archive }}"
