@@ -10,7 +10,7 @@
 
 - debug: msg=" yourkit | Path exists and is a directory"
   when: home_present.stat.isdir is defined and home_present.stat.isdir == true
-  
+
 - name: yourkit | Create temporary directory
   shell: mktemp -d
   register: tempdir
@@ -21,6 +21,14 @@
   apt:
     pkg=tar
     state="present"
+  when: yourkit_archive_tar_enabled
+  tags: yourkit_setup
+
+- name: yourkit | Install zip
+  apt:
+    pkg=zip
+    state="present"
+  when: yourkit_archive_zip_enabled
   tags: yourkit_setup
 
 - name: yourkit | Download yourkit
@@ -39,18 +47,36 @@
   sudo : yes
   when: yourkit_download.changed
   tags: yourkit_setup
-  
-- name: yourkit | Extract archive yourkit
-  command: chdir={{ yourkit_base_dir }} /bin/tar xfj {{ yourkit_dir_tmp }}/{{ yourkit_archive }}
-  when: yourkit_download.changed
-  tags: yourkit_setup
-  
-#  command: tar xzf {{ eclipse_dir_tmp }}/{{eclipse_archive}} -C {{eclipse_base_dir}}/eclipse-{{eclipse_name}} --strip-components=1  
-  
-#- name: yourkit | Configure yourkit
-#  template: src=yourkit.properties.j2 dest={{yourkit_configuration}}
-#  register: yourkit_configure
 
+- name: yourkit | Extract archive yourkit (tar)
+  command: chdir={{ yourkit_base_dir }} /bin/tar xfj {{ yourkit_dir_tmp }}/{{ yourkit_archive }}
+  when: yourkit_download.changed and yourkit_archive_tar_enabled
+  tags: yourkit_setup
+
+- name: yourkit | Extract archive yourkit (zip)
+  command: chdir={{ yourkit_base_dir }} /usr/bin/unzip -o -q {{ yourkit_dir_tmp }}/{{ yourkit_archive }}
+  when: yourkit_download.changed and yourkit_archive_zip_enabled
+  tags: yourkit_setup
+
+#  command: tar xzf {{ eclipse_dir_tmp }}/{{eclipse_archive}} -C {{eclipse_base_dir}}/eclipse-{{eclipse_name}} --strip-components=1
+
+- name: yourkit | Configure yourkit startup file
+  template: src=startup_with_yjp.sh.j2 dest={{ tomcat_catalina_home_dir }}/bin/startup_with_yjp.sh
+  when: tomcat_yourkit_enabled
+  tags: yourkit
+
+- name: yourkit | Configure yourkit license server
+  template: src=license-server.conf.j2 dest={{ yourkit_home_dir }}/{{ yourkit_license_server_file }}
+  register: yourkit_configure
+  when: yourkit_license_server_enable
+  tags: yourkit
+  
+- name: yourkit | Configure yourkit ide
+  template: src=ide2014.txt.j2 dest={{ yourkit_home_dir }}/ide2014.txt
+  register: yourkit_configure  
+  when: yourkit_ide_enable
+  tags: eclipse
+  
 #- name: yourkit | Ensure yourkit restarted
 #  service: name=yourkit state=restarted
 #  when: yourkit_configure.changed
@@ -59,5 +85,6 @@
   file: name={{ tempdir.stdout }} state=absent
   tags: yourkit_setup
 
-- debug: msg=" yourkit | Start yourkit {{yourkit_base_dir}}/bin/ypj.sh"
+- debug: msg=" yourkit | Yourkit agent {{ yourkit_base_dir }}/{{ yourkit_name }}/bin/{{ yourkit_arch }}/*"
+- debug: msg=" yourkit | Start yourkit {{ yourkit_base_dir }}/{{ yourkit_name }}/bin/ypj.sh"
 
