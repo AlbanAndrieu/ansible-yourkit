@@ -21,14 +21,14 @@
   apt:
     pkg=tar
     state="present"
-  when: yourkit_archive_tar_enabled
+  when: (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu') and yourkit_archive_tar_enabled
   tags: yourkit_setup
 
 - name: yourkit | Install zip
   apt:
     pkg=zip
     state="present"
-  when: yourkit_archive_zip_enabled
+  when: (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu') and yourkit_archive_zip_enabled
   tags: yourkit_setup
 
 - name: yourkit | Download yourkit
@@ -70,13 +70,13 @@
   register: yourkit_configure
   when: yourkit_license_server_enable
   tags: yourkit
-  
+
 - name: yourkit | Configure yourkit ide
   template: src=ide2014.txt.j2 dest={{ yourkit_home_dir }}/ide2014.txt
-  register: yourkit_configure  
+  register: yourkit_configure
   when: yourkit_ide_enable
   tags: eclipse
-  
+
 #- name: yourkit | Ensure yourkit restarted
 #  service: name=yourkit state=restarted
 #  when: yourkit_configure.changed
@@ -86,5 +86,5 @@
   tags: yourkit_setup
 
 - debug: msg=" yourkit | Yourkit agent {{ yourkit_base_dir }}/{{ yourkit_name }}/bin/{{ yourkit_arch }}/*"
-- debug: msg=" yourkit | Start yourkit {{ yourkit_base_dir }}/{{ yourkit_name }}/bin/ypj.sh"
+- debug: msg=" yourkit | Start yourkit {{ yourkit_base_dir }}/{{ yourkit_name }}/bin/yjp.sh"
 

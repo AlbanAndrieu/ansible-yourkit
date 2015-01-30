@@ -2,5 +2,8 @@
 - hosts: all
   sudo: true
   roles:
-    - role: ./
-     
+    - { role: ./,
+        user: "root",
+        home: "/root",
+        tomcat_yourkit_enabled: no,
+      }
