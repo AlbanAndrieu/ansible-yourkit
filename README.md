@@ -1,8 +1,8 @@
 ## alban.andrieu.yourkit
 
-[![Travis CI](http://img.shields.io/travis/AlbanAndrieu/ansible-yourkit.svg?style=flat)](http://travis-ci.org/AlbanAndrieu/ansible-yourkit) [![Branch](http://img.shields.io/github/tag/AlbanAndrieu/ansible-yourkit.svg?style=flat-square)](https://github.com/AlbanAndrieu/ansible-yourkit/tree/master) [![Donate](https://img.shields.io/gratipay/AlbanAndrieu.svg?style=flat)](https://www.gratipay.com/AlbanAndrieu)  [![Ansible Galaxy](http://img.shields.io/badge/galaxy-alban.andrieu.yourkit-blue.svg?style=flat)](https://galaxy.ansible.com/list#/roles/1997) [![Platforms](http://img.shields.io/badge/platforms-ubuntu-lightgrey.svg?style=flat)](#)
+[![Travis CI](http://img.shields.io/travis/AlbanAndrieu/ansible-yourkit.svg?style=flat)](http://travis-ci.org/AlbanAndrieu/ansible-yourkit) [![Branch](http://img.shields.io/github/tag/AlbanAndrieu/ansible-yourkit.svg?style=flat-square)](https://github.com/AlbanAndrieu/ansible-yourkit/tree/master) [![Donate](https://img.shields.io/gratipay/AlbanAndrieu.svg?style=flat)](https://www.gratipay.com/AlbanAndrieu)  [![Ansible Galaxy](http://img.shields.io/badge/galaxy-alban.andrieu.yourkit-blue.svg?style=flat)](https://galaxy.ansible.com/list#/roles/2732) [![Platforms](http://img.shields.io/badge/platforms-ubuntu-lightgrey.svg?style=flat)](#)
 
-Ensures that yourkit is properly installed (using `apt`) and configured
+Ensures that yourkit is properly installed and configured
 
 ### Installation
 
@@ -21,38 +21,58 @@ List of default variables available in the inventory:
 ```yaml
         yourkit_enabled: yes                       # Enable module
     
-    yourkit_home_dir: "/usr/share/yourkit"
-    yourkit_configuration: "{{ yourkit_home_dir }}/bin/yourkit.properties"
+    #user: 'albandri' #please override me
+    user: "{{ lookup('env','USER') }}"
+    yourkit_owner: "{{ user }}"
+    yourkit_group: "{{ yourkit_owner }}"
+    #home: '~' #please override me
+    home: "{{ lookup('env','HOME') }}"
+    yourkit_owner_home: "{{ home }}"
+    yourkit_base_dir: "/usr/local/yourkit"
+    yourkit_home_dir: "{{ home }}/.yjp"
+    yourkit_license_server_enable: no
+    yourkit_license_server_file: "license-server.conf"
+    yourkit_license_server: "127.0.0.1"
+    yourkit_ide_enable: no
+    yourkit_ide_file: "ide{{ yourkit_year }}.txt"
     
     yourkit_dir_tmp: "/tmp" # or override with "{{ tempdir.stdout }} in order to have be sure to download the file"
     
-    yourkit_plugins_version: "1.2.0"
+    yourkit_year: "2014"
+    yourkit_build: "14116"
+    yourkit_version: "{{ yourkit_year }}-build-{{ yourkit_build }}"
     
-    yourkit_plugins_standard_enabled: yes
-    yourkit_plugins_standard_archive: "yourkitPlugins-Standard-{{ yourkit_plugins_version }}.zip"
-    yourkit_plugins_standard_url: "http://yourkit-plugins.org/downloads/file/{{ yourkit_plugins_standard_archive }}"
+    #yourkit_arch_32: "aix-ppc-32"
+    #yourkit_arch_64: "aix-ppc-64"
+    #yourkit_arch_32: "freebsd-x86-32"
+    #yourkit_arch_64: "freebsd-x86-64"
+    #yourkit_arch_32: "hpux-ia64-32"
+    #yourkit_arch_64: "hpux-ia64-64"
+    #yourkit_arch: "linux-armv5-sf"
+    #yourkit_arch: "linux-armv7-hf"
+    #yourkit_arch: "linux-armv7-sf"
+    #yourkit_arch_32: "linux-ppc-32"
+    #yourkit_arch_64: "linux-ppc-64"
+    #yourkit_arch: "mac"
+    #yourkit_arch_32: "solaris-sparc-32"
+    #yourkit_arch_64: "solaris-sparc-64"
+    #yourkit_arch: "solaris-x86-32"
+    #yourkit_arch_64: "solaris-x86-64"
+    #default
+    yourkit_arch_32: "linux-x86-32"
+    yourkit_arch_64: "linux-x86-64"
+    yourkit_arch: "{{ yourkit_arch_64 }}"
+    yourkit_agent: "libyjpagent.so"
     
-    yourkit_plugins_extras_enabled: yes
-    yourkit_plugins_extras_archive: "yourkitPlugins-Extras-{{ yourkit_plugins_version }}.zip"
-    yourkit_plugins_extras_url: "http://yourkit-plugins.org/downloads/file/{{ yourkit_plugins_extras_archive }}"
+    yourkit_name: "yjp-{{ yourkit_version }}"
+    #yourkit_archive: "{{ yourkit_name }}-linux.tar.bz2"
+    yourkit_archive_tar_enabled: no
+    yourkit_archive: "{{ yourkit_name }}.zip"
+    yourkit_archive_zip_enabled: yes
+    yourkit_url: "http://www.yourkit.com/download/{{ yourkit_archive }}"
     
-    yourkit_plugins_extraslibs_enabled: yes
-    yourkit_plugins_extraslibs_archive: "yourkitPlugins-ExtrasLibs-{{ yourkit_plugins_version }}.zip"
-    yourkit_plugins_extraslibs_url: "http://yourkit-plugins.org/downloads/file/{{ yourkit_plugins_extraslibs_archive }}"
-    
-    yourkit_plugins_webdriver_enabled: no
-    yourkit_plugins_webdriver_archive: "yourkitPlugins-WebDriver-{{ yourkit_plugins_version }}.zip"
-    yourkit_plugins_webdriver_url: "http://yourkit-plugins.org/downloads/file/{{ yourkit_plugins_webdriver_archive }}"
-    
-    yourkit_plugins_hadoop_enabled: no
-    yourkit_plugins_hadoop_archive: "yourkitPlugins-Hadoop-{{ yourkit_plugins_version }}.zip"
-    yourkit_plugins_hadoop_url: "http://yourkit-plugins.org/downloads/file/{{ yourkit_plugins_hadoop_archive }}"
-    
-    yourkit_serveragent_version: "2.2.1"
-    
-    yourkit_serveragent_enabled: no
-    yourkit_serveragent_archive: "ServerAgent-{{ yourkit_serveragent_version }}.zip"
-    yourkit_serveragent_url: "http://yourkit-plugins.org/downloads/file/{{ yourkit_serveragent_archive }}"
+    tomcat_yourkit_enabled: yes
+    tomcat_catalina_home_dir: "/usr/share/tomcat7"
 ```
 
 

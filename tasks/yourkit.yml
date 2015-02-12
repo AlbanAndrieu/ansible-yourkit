@@ -30,6 +30,8 @@
     state="present"
   when: (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu') and yourkit_archive_zip_enabled
   tags: yourkit_setup
+  
+- debug: msg=" Version : {{ ansible_distribution }} {{ ansible_distribution_version }} "
 
 - name: yourkit | Download yourkit
   command: /usr/sfw/bin/wget -P {{ yourkit_dir_tmp }} {{ yourkit_url }} --no-check-certificate
