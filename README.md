@@ -39,7 +39,8 @@ List of default variables available in the inventory:
     yourkit_dir_tmp: "/tmp" # or override with "{{ tempdir.stdout }} in order to have be sure to download the file"
     
     yourkit_year: "2014"
-    yourkit_build: "14116"
+    #yourkit_build: "14116"
+    yourkit_build: "14120"
     yourkit_version: "{{ yourkit_year }}-build-{{ yourkit_build }}"
     
     #yourkit_arch_32: "aix-ppc-32"
@@ -69,7 +70,7 @@ List of default variables available in the inventory:
     yourkit_archive_tar_enabled: no
     yourkit_archive: "{{ yourkit_name }}.zip"
     yourkit_archive_zip_enabled: yes
-    yourkit_url: "http://www.yourkit.com/download/{{ yourkit_archive }}"
+    yourkit_url: "https://www.yourkit.com/download/{{ yourkit_archive }}"
     
     tomcat_yourkit_enabled: yes
     tomcat_catalina_home_dir: "/usr/share/tomcat7"
