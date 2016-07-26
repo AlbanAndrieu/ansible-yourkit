@@ -17,10 +17,10 @@ yourkit_ide_file: "ide{{ yourkit_year }}.txt"
 
 yourkit_dir_tmp: "/tmp" # or override with "{{ tempdir.stdout }} in order to have be sure to download the file"
 
-yourkit_year: "2015"
-#yourkit_build: "14116"
-yourkit_build: "15084"
-yourkit_version: "{{ yourkit_year }}-build-{{ yourkit_build }}"
+yourkit_year: "2016.02"
+#yourkit_build: "15084"
+yourkit_build: "b40"
+yourkit_version: "{{ yourkit_year }}-{{ yourkit_build }}"
 
 #yourkit_arch_32: "aix-ppc-32"
 #yourkit_arch_64: "aix-ppc-64"
