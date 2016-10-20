@@ -19,7 +19,7 @@ yourkit_dir_tmp: "/tmp" # or override with "{{ tempdir.stdout }} in order to hav
 
 yourkit_year: "2016.02"
 #yourkit_build: "15084"
-yourkit_build: "b40"
+yourkit_build: "b43"
 yourkit_version: "{{ yourkit_year }}-{{ yourkit_build }}"
 
 #yourkit_arch_32: "aix-ppc-32"
