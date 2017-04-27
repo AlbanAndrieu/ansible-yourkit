@@ -104,6 +104,8 @@
 - name: yourkit | Cleanup temporary directory
   file: name={{ tempdir.stdout }} state=absent
   tags: yourkit_setup
+  changed_when: false    
+  ignore_errors: "{{ ansible_check_mode }}"  
 
 - debug: msg=" yourkit | Yourkit agent {{ yourkit_base_dir }}/{{ yourkit_name }}/bin/{{ yourkit_arch }}/*"
 - debug: msg=" yourkit | Start yourkit {{ yourkit_base_dir }}/{{ yourkit_name }}/bin/yjp.sh"
