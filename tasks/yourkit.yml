@@ -18,17 +18,19 @@
   tags: yourkit_setup
 
 - name: yourkit | Install tar
-  apt:
-    pkg=tar
-    state="present"
-  when: (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu') and yourkit_archive_tar_enabled
+  action: "{{ ansible_pkg_mgr }} name={{ item }} state={{ util_pkg_state|default('present') }} update_cache=yes"
+  #when: (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu') and 
+  when: yourkit_archive_tar_enabled
+  with_items:
+   - tar  
   tags: yourkit_setup
 
 - name: yourkit | Install zip
-  apt:
-    pkg=zip
-    state="present"
-  when: (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu') and yourkit_archive_zip_enabled
+  action: "{{ ansible_pkg_mgr }} name={{ item }} state={{ util_pkg_state|default('present') }} update_cache=yes"
+  #when: (ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu') and 
+  when: yourkit_archive_zip_enabled
+  with_items:
+   - zip    
   tags: yourkit_setup
   
 - debug: msg="Version {{ ansible_distribution }} {{ ansible_distribution_version }}"
