@@ -15,7 +15,8 @@ yourkit_license_server: "127.0.0.1"
 yourkit_ide_enable: no
 yourkit_ide_file: "ide{{ yourkit_year }}.txt"
 
-yourkit_dir_tmp: "/tmp" # or override with "{{ tempdir.stdout }} in order to have be sure to download the file"
+#yourkit_dir_tmp: "/tmp" # or override with "{{ tempdir.stdout }} in order to have be sure to download the file"
+yourkit_dir_tmp: "{{ tempdir.stdout }}"
 
 yourkit_year: "2016.02"
 #yourkit_build: "15084"
